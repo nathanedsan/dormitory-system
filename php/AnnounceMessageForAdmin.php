@@ -1,0 +1,538 @@
+<?php
+session_start();
+$username = $_SESSION["Username"];
+if (isset($_SESSION["loggedinAdmin"]) == null) {
+    header("location:index.php");
+    exit;
+}
+include_once("config.php");
+?>
+
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>管理公告</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="assets/fonts/line-icons.css">
+    <!--Morris Chart CSS -->
+    <link rel="stylesheet" href="assets/plugins/morris/morris.css">
+    <!-- Main Style -->
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+    <!-- Responsive Style -->
+    <link rel="stylesheet" type="text/css" href="assets/css/responsive.css">
+
+    <style>
+        option {
+            font-family: Microsoft JhengHei;
+            font-size: 15px;
+        }
+
+        select {
+            font-family: Microsoft JhengHei;
+            font-size: 15px;
+        }
+
+        label {
+            font-family: Microsoft JhengHei;
+            font-size: 20px;
+        }
+
+        [name="am_title"] {
+            font-size: 20px;
+            color: black;
+            font-weight: bold;
+        }
+
+        [id="is_title"]:hover {
+            color: gray;
+        }
+
+        table>thead>tr>th {
+            text-align: left;
+            border-bottom: 2px solid #c0c0c0;
+            font-weight: bold;
+            font-size: 20px;
+            height: 40px;
+        }
+
+        table>tbody>tr {
+            border-bottom: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+
+        textarea[name="am_content"] {
+            overflow-y: scroll;
+            resize: none;
+            font-size: 15px;
+            width: 600px;
+            height: 200px;
+            vertical-align: top;
+        }
+
+        #Date_Style {
+            width: 150px;
+            color: black;
+
+        }
+
+        #Title_Style {
+            width: 960px;
+            color: black;
+        }
+
+        input[type="radio"] {
+            text-align: center;
+            width: 50px;
+        }
+
+        div[id="no_announce"] {
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+    <script src="timeout.js"></script>
+</head>
+
+<body>
+    <div class="app header-default side-nav-dark">
+        <div class="layout">
+
+            <div class="header navbar">
+                <div class="header-container">
+                    <div class="nav-logo">
+                        <a href="#">
+                            <b><img src="../image/logo.jpg" alt="" width="50px"></b>
+                            <span class="logo">
+                                <img src="../image/logo-text.png" width="200px" alt="">
+                            </span>
+                        </a>
+                    </div>
+
+                    <ul class="nav-left">
+                        <li>
+                            <a class="sidenav-fold-toggler" href="javascript:void(0);">
+                                <i class="lni-menu"></i>
+                            </a>
+                            <a class="sidenav-expand-toggler" href="javascript:void(0);">
+                                <i class="lni-menu"></i>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav-right">
+
+                        <li class="user-profile dropdown dropdown-animated scale-left">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img class="profile-img img-fluid" src="../image/avatar.png" alt="">
+                            </a>
+                            <ul class="dropdown-menu dropdown-md">
+                                <li>
+                                    <ul class="list-media">
+                                        <li class="list-item avatar-info">
+                                            <div class="media-img">
+                                                <img src="../image/avatar.png" alt="">
+                                            </div>
+                                            <div class="info">
+                                                <span class="title text-semibold"><?php echo $username; ?></span>
+                                                <span class="sub-title">系統管理員</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="Profile.php">
+                                        <i class="lni-user"></i>
+                                        <span>個人資料</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="ModifyPasswordFront.php">
+                                        <i class="lni-cog"></i>
+                                        <span>更改密碼</span>
+                                    </a>
+                                </li>
+                                <hr style="margin:2px;">
+                                <li>
+                                    <a href="logout.php">
+                                        <i class="lni-lock"></i>
+                                        <span>登出</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <div class="side-nav expand-lg">
+                <div class="side-nav-inner">
+                    <ul class="side-nav-menu">
+
+
+                        <li class="nav-item dropdown">
+                            <a href="admin.php">
+                                <span class="icon-holder">
+                                    <i class="lni-dashboard"></i>
+                                </span>
+                                <span class="title">首頁</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="DormitoryManage.php">
+                                <span class="icon-holder">
+                                    <i class="lni-apartment"></i>
+                                </span>
+                                <span class="title">管理宿舍</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown open">
+                            <a href="AnnounceMessageForAdmin.php">
+                                <span class="icon-holder">
+                                    <i class="lni-bullhorn"></i>
+                                </span>
+                                <span class="title">管理公告</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="CrewManage.php">
+                                <span class="icon-holder">
+                                    <i class="lni-emoji-smile"></i>
+                                </span>
+                                <span class="title">管理人員</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle" href="#">
+                                <span class="icon-holder">
+                                    <i class="lni-timer"></i>
+                                </span>
+                                <span class="title">管理申請紀錄</span>
+                                <span class="arrow">
+                                    <i class="lni-chevron-right"></i>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu sub-down">
+                                <li>
+                                    <a href="DropApplicationRecord.php">退宿申請</a>
+                                </li>
+                                <li>
+                                    <a href="ChangeDormitoryApplication.php">換宿申請</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="AllocateRoomAdmin.php">
+                                <span class="icon-holder">
+                                    <i class="lni-package"></i>
+                                </span>
+                                <span class="title">入住申請&分配房間</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a href="Maintainmanageradmin.php">
+                                <span class="icon-holder">
+                                    <i class="lni-files"></i>
+                                </span>
+                                <span class="title">報修系統</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="page-container">
+                <div class="main-content">
+                    <div class="container-fluid">
+                        <div class="breadcrumb-wrapper row">
+                            <div class="col-12 col-lg-3 col-md-6"></div>
+                            <div class="col-12 col-lg-9 col-md-6">
+                                <ol class="breadcrumb float-right">
+                                    <li><a href="admin.php">回首頁</a></li>
+                                    <li class="active">系統管理員</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="container-fluid">
+                        <div class="card-group">
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="d-flex no-block align-items-center">
+
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <form action="AnnounceMessageAdminMethod.php" method="POST">
+                                                                <div>
+                                                                    <label>功能：</label>
+                                                                    <select name="method" id="method" onchange="chg()">
+                                                                        <option value="check" name="check" selected>查看</option>
+                                                                        <option value="insert" name="insert">新增</option>
+                                                                        <option value="delete" name="delete">刪除</option>
+                                                                        <option value="update" name="update">修改</option>
+                                                                    </select>
+                                                                </div>
+                                                                <hr>
+                                                                <div id="detail"></div>
+                                                            </form>
+                                                            <div id="view"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="content-footer">
+                    <div class="footer">
+                        <div class="copyright">
+                            <ul>
+                              
+                                <li>洽詢電話 : 07-591-9596</li>
+                            </ul>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="preloader">
+        <div class="loader" id="loader-1"></div>
+    </div>
+    <script src="assets/js/jquery-min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.app.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/plugins/morris/morris.min.js"></script>
+    <script src="assets/plugins/raphael/raphael-min.js"></script>
+    <script src="assets/js/dashborad1.js"></script>
+
+</body>
+
+</html>
+
+<?php
+$msg_fetch = "SELECT * FROM `announce_message` ORDER BY `AM_Date` desc , `AM_No` desc";
+$msg_result = mysqli_query($link, $msg_fetch);
+?>
+
+<script>
+    window.onload = show()
+
+    function show() { //只顯示公告的發布日期與標題
+        clean()
+        var arr = []
+        var str = ``
+        var times = 0
+        <?php
+        $msg_result = mysqli_query($link, $msg_fetch);
+        while ($announce = mysqli_fetch_array($msg_result)) { // announce = [編號,日期,標題,內容,adminID]
+            $title = htmlspecialchars($announce[2], ENT_QUOTES);
+            echo "arr.push(['$announce[0]','$announce[1]','$title']);"; //格式:[編號,日期,標題]
+        }
+        ?>
+        if (arr.length == 0) {
+            $('#detail').replaceWith(`<div id="detail"><div id="no_announce">查無公告訊息!</div></div>`)
+            return;
+        }
+        str += `<table><thead><tr><th id="Date_Style"><div>日期</div></th>`
+        str += `<th id="Title_Style"><div>標題</div></th></thead><tbody>`
+        for (var i of arr) {
+            var DATE = i[1].split(' ') // 只取出日期用的
+            str += `<input type="hidden" id="am_no" value="${i[0]}">`
+            str += `<tr name="TR_H_${i[0]}"><td><label style="color:gray;" name="am_date"><div name="DATE">${DATE[0]}</div></label></td>`
+            str += `<td><a id="is_title" href="javascript:void(0)" name="am_title" onclick="showContent(false, ${i[0]})"><div name="TITLE_${i[0]}">${i[2]}</div></a></td>`
+            str += `</tr>`
+        }
+        str += `<tbody></table>`
+        $('#view').append(str)
+        for (var i of arr) {
+            changeTR_H(i[0]);
+        }
+    }
+
+    function showContent(del, am_no) { // 顯示公告的內容
+        var str = ``
+        var arr = []
+        clean()
+
+        <?php
+        $msg_result = mysqli_query($link, $msg_fetch);
+        while ($announce = mysqli_fetch_array($msg_result)) {
+            $getAdminName = "SELECT `Admin_Name` FROM `admin` WHERE `Admin_ID` = '$announce[4]'";
+            $AdminName_result = mysqli_query($link, $getAdminName);
+            $Admin_name = mysqli_fetch_array($AdminName_result)[0];
+
+            $title = htmlspecialchars($announce[2], ENT_QUOTES);
+            $content = htmlspecialchars($announce[3], ENT_QUOTES);
+
+            $content = str_replace("\r\n", "There_will_be_換行です", $content);
+            echo "arr.push(['$announce[0]','$title','$content','$Admin_name']);";
+            // arr = [編號,標題,內容,Admin_name]
+        }
+        ?>
+
+        for (var i of arr) {
+            if (i[0] == parseInt(am_no)) {
+                str += `<div><label name="am_title">${i[1]}</label>`
+                str += `<div style="font-size:18px;" name="am_content">內容：<br>${i[2].replaceAll("There_will_be_換行です","<br>")}</div></div>`
+                str += `<div style="font-size:18px;text-align: right;" name="admin_ID">發布者：${i[3]}</div>`
+                if (del)
+                    str += `<button class="btn btn-secondary mb-3" href="javascript:void(0)" name="back" onclick="chg()">返回</button>`
+                else
+                    str += `<button class="btn btn-secondary mb-3" href="javascript:void(0)" name="back" onclick="show()">返回</button>`
+                break;
+            }
+        }
+
+        $('#view').append(str)
+    }
+
+
+    function chg() {
+        clean()
+        var op = $("#method").val()
+        console.log(op)
+        if (op == "insert") {
+            document.getElementById("detail").innerHTML = '<label style="font-family:Microsoft JhengHei; font-size:20px;" for="am_title">標題：</label>' +
+                '<input type="text" name="am_title" id="am_title" autocomplete="off" style="width:600px;" required><br>' +
+                '<label style="float:top;font-family:Microsoft JhengHei; font-size:20px;" for="am_content">內容：</label>' +
+                '<textarea type="text" name="am_content" id="am_content" autocomplete="off" required></textarea><br>' +
+                '<br><button class="btn btn-common mb-3" style="font-family:Microsoft JhengHei; font-size:20px;margin-bottom:8px;" type="submit">發布</button>'
+        } else if (op != "check") {
+            var arr = []
+            <?php
+            $msg_result = mysqli_query($link, $msg_fetch);
+            while ($announce = mysqli_fetch_array($msg_result)) {
+                $title = htmlspecialchars($announce[2], ENT_QUOTES);
+                echo "arr.push(['$announce[0]','$announce[1]','$title']);"; //格式:[編號,日期,標題]
+            }
+
+            ?>
+
+            var str = ``;
+
+            if (arr.length === 0) {
+                $('#detail').replaceWith('<div id="detail"><div id="no_announce">查無公告訊息!</div></div>')
+                return;
+            } else {
+                if (op == "delete") { //選取刪除功能時顯示的畫面
+                    str += `<button class="btn btn-secondary mb-3" id="del_cnt_btn" type="submit" disabled>刪除內容</button><br>`
+                    str += `<table><thead><tr><th></th><th id="Date_Style"><div>日期</div></th>`
+                    str += `<th id="Title_Style"><div>標題</div></th></thead><tbody>`
+                    for (var i of arr) {
+                        var DATE = i[1].split(' ') // 只取出日期用的
+                        str += `<tr name="TR_H_${i[0]}"><td><input type="radio" name="rdb" id="am_no_${i[0]}" onclick="radioChg(${i[0]})"><input type="hidden" name="am_no" id="${i[0]}" value="${i[0]}"></td>`
+                        str += `<td><label style="font-weight:bold;color:gray;" name="am_date"><div name="DATE">${DATE[0]}</div></label></td><td><a href="javascript:void(0)" name="am_title" onclick="showContent(true,${i[0]})"><div name="TITLE_${i[0]}">${i[2]}</div></a></td>`
+                        str += `</tr>`
+                    }
+
+                } else {
+                    str += `<label>請點選要修改的公告!</label><br><br>`
+                    str += `<table><thead><tr><th id="Date_Style"><div>日期</div></th>`
+                    str += `<th id="Title_Style"><div>標題</div></th></thead><tbody>`
+                    for (var i of arr) {
+                        var DATE = i[1].split(' ') // 只取出日期用的
+                        str += `<tr name="TR_H_${i[0]}"><td><label style="font-weight:bold;color:gray;" name="am_date"><div name="DATE">${DATE[0]}</div></label></td>`
+                        str += `<td><a href="javascript:void(0)" name="am_title" onclick="textable(${i[0]})"><div name="TITLE_${i[0]}">${i[2]}</div></a></td>`
+                        str += `</tr>`
+                    }
+                }
+                str += `<tbody></table>`
+                $("#detail").append(str);
+                for (var i of arr) {
+                    changeTR_H(i[0]);
+                }
+            }
+        } else {
+            show();
+        }
+    }
+
+    function radioChg(am_no) { //點選刪除的radio button時顯示的內容
+        $(`#am_no_${am_no}`).replaceWith(`<input type="radio" name="rdb" id="am_no_${am_no}" onclick="radioChg(${am_no})" checked>`)
+        $(`#${am_no}`).replaceWith(`<input type="hidden" name="am_no_target" id="${am_no}" value="${am_no}">`)
+        $(`#del_cnt_btn`).replaceWith(`<button class="btn btn-secondary mb-3" id="del_cnt_btn" type="submit">刪除內容</button>`)
+    }
+
+    function textable(am_no) { // 開始修改內容時
+        clean()
+        var arr = []
+        var str = ``;
+
+        <?php
+        $msg_result = mysqli_query($link, $msg_fetch);
+        while ($announce = mysqli_fetch_array($msg_result)) { // announce = [編號,日期,標題,內容,adminID]
+            $title = htmlspecialchars($announce[2], ENT_QUOTES);
+            $content = htmlspecialchars($announce[3], ENT_QUOTES);
+
+            $content = str_replace("\r\n", "There_will_be_換行です", $content);
+            echo "arr.push(['$announce[0]','$announce[1]','$title','$content']);"; //格式:[編號,日期,標題,內容]
+        }
+        ?>
+
+        for (var i of arr) {
+            if (i[0] == am_no) {
+                str += `<div><input type="hidden" name="am_no" id="am_no" value="${i[0]}">`
+                str += `<label for="am_title">標題：</label><input type="text" name="am_title" id="am_title" value="${i[2]}" autocomplete="off"  style="width:600px;font-size:20px;" required><br>`
+                str += `<label for="am_content">內容：</label>`
+                str += `<textarea type="text" name="am_content" id="am_content" autocomplete="off" required>${i[3].replaceAll("There_will_be_換行です","\n")}</textarea><br>`
+                str += `<br><div style="display: flex;">`
+                str += `<button style="margin-right:2px;" class="btn btn-common mb-3" id="up_cnt_btn" type="submit">修改</button>`
+                str += `<button class="btn btn-secondary mb-3" href="javascript:void(0)" name="back" onclick="chg()">返回</button></div></div>`
+                break;
+            }
+        }
+        $("#detail").append(str);
+
+    }
+
+    function clean() { //把detail跟view內的內容都清空
+        $("#detail").replaceWith('<div id="detail"></div>');
+        $("#view").replaceWith('<div id="view"></div>');
+    }
+
+    function changeTR_H(num) {
+        var word_H = $(`div[name='TITLE_${num}']`).height() + 30;
+        console.log("Old = " + $(`div[name='TITLE_${num}']`).height())
+        $(`tr[name='TR_H_${num}']`).height(word_H)
+        console.log("New = " + $(`tr[name='TR_H_${num}']`).height())
+    }
+</script>
